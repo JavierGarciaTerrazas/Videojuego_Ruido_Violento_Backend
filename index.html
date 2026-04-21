@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.15.1/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Auth Demo</h1>
+    <h2>Login</h2>
+
+    <input id="email" type="email" placeholder="Correo electrónico">
+    <input id="password" type="password" placeholder="Contraseña">
+    <button onclick="login()">Iniciar sesión</button>
+
+    <h2>Ruta protegida</h2>
+    <button onclick="getProtected()">acceder a ruta protegida</button>
+    <pre id="output"> </pre>
+
+    <script>    
+        const API_URL = 'http://localhost:3333';
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await axios.post(`${API_URL}/auth/login`, { 
+                    email, 
+                    password 
+                });
+                const token = res.data.token; //obtenemos el token del backend
+                localStorage.setItem('token', token); //guardamos el token en el localStorage
+                document.getElementById('output').innerText = 'Inicio de sesión exitoso, token guardado';
+            } 
+            catch (err){
+                document.getElementById('output').innerText = '⛔ Error al iniciar sesión: ' + err.response.data.message;
+            }
+        }
+
+        async function getProtected() {
+            const token = localStorage.getItem('token') //obtenemos el token del localStorage
+            console.log('token obtenido de localStorage:', token); 
+
+            try {
+                const res = await axios.get(`${API_URL}/protegida` ,{
+                    headers: {
+                        Authorization: `Bearer ${token}` //enviamos el token en el header de la petición
+                    }
+                });
+                document.getElementById('output').innerText = 
+                JSON.stringify(res.data, null, 2);
+            } 
+            catch (err) {
+            }
+        }
+
+    </script>
+</body>
+</html>
