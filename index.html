@@ -13,9 +13,11 @@
     <input id="email" type="email" placeholder="Correo electrónico">
     <input id="password" type="password" placeholder="Contraseña">
     <button onclick="login()">Iniciar sesión</button>
+    <button onclick="logout()">Cerrar sesión</button>
 
     <h2>Ruta protegida</h2>
     <button onclick="getProtected()">acceder a ruta protegida</button>
+    <button onclick="getAdmin()">Ruta de admin</button>
     <pre id="output"> </pre>
 
     <script>    
@@ -39,6 +41,11 @@
             }
         }
 
+        async function logout() {
+            localStorage.removeItem('token') //eliminamos el token del localStorage
+            document.getElementById('output').innerText = 'Sesión cerrada, token eliminado';
+        }
+
         async function getProtected() {
             const token = localStorage.getItem('token') //obtenemos el token del localStorage
             console.log('token obtenido de localStorage:', token); 
@@ -53,6 +60,23 @@
                 JSON.stringify(res.data, null, 2);
             } 
             catch (err) {
+            }
+        }
+
+        async function getAdmin() {
+            const token = localStorage.getItem('token') //obtenemos el token del localStorage
+
+            try {
+                const res = await axios.get(`${API_URL}/admin`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` //enviamos el token en el header de la petición
+                    }
+                });
+                document.getElementById('output').innerText = 
+                JSON.stringify(res.data, null, 2); //mostramos la respuesta del backend en el elemento con id 'output'
+            } 
+            catch (err){
+                document.getElementById('output').innerText = '⛔ Error al acceder a la ruta de admin: ' + err.response.data.message;
             }
         }
 
