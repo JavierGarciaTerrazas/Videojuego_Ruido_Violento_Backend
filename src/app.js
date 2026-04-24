@@ -2,6 +2,8 @@ import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import { auth } from '../src/middlewares/authMiddleware.js';
 import { authorize } from '../src/middlewares/roleMiddleware.js';
+import gameRoutes from './routes/gameRoutes.js';
+import { getGames } from './controllers/gameController.js';
 
 import cors from 'cors';
 
@@ -12,6 +14,9 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 //rutas protegidas
+app.use('/games', gameRoutes);
+app.use('/games', getGames )
+
 app.get('/protegida',auth, (req, res) => {
   res.json({ 
     message: 'Acceso permitido 👌', 

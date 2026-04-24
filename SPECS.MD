@@ -8,3 +8,10 @@ Organizar su biblioteca
 Marcar progreso / estado
 No ver datos de otros usuarios
 
+diseño de rutas
+
+GET    /games        => User    obtener todos los juegos  
+GET    /games/:id    => User    obtener un juego  
+POST   /games        => admin   crear un juego           **
+PATCH  /games        => admin   modificar un juego
+DELETE /games        => admin   borrar un juego
