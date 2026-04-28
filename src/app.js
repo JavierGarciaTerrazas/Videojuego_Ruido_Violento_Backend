@@ -17,6 +17,7 @@ app.use('/auth', authRoutes);
 app.use('/games', gameRoutes);
 app.use('/games', getGames )
 
+
 app.get('/protegida',auth, (req, res) => {
   res.json({ 
     message: 'Acceso permitido 👌', 

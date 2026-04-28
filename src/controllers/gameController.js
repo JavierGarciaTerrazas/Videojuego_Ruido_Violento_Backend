@@ -26,3 +26,17 @@ export const getGames = async (req, res) => {
         res.status(500).json({ message: "❌ Error al obtener los juegos ✖️", error: error.message });
     }
 }
+
+export const deleteGame = async (req, res) => {
+    try {
+        const game = await Game.findByIdAndDelete(req.params.id);
+        if (!game) {
+            return res.status(404).json({ message: "⛔ Juego no encontrado ✖️" });
+        }
+
+        res.json({ message: "✅ Juego eliminado exitosamente ✔️" + game.titulo });
+    } 
+    catch (error) {
+        res.status(500).json({ message: "❌ Error al eliminar el juego ✖️", error: error.message });
+    }
+}
