@@ -15,3 +15,8 @@ GET    /games/:id    => User    obtener un juego
 POST   /games        => admin   crear un juego           **
 PATCH  /games        => admin   modificar un juego
 DELETE /games        => admin   borrar un juego
+
+Listar Juegos
+aplicar filtros desde query params
+crear relacion usuario => juegos(library)
+mostrar datos propios del ususario

@@ -27,6 +27,11 @@
     <input id="plataforma" placeholder="Plataforma" />
     <button onclick="crearJuego()">Crear juego</button>
 
+    <h2>Liste de Juegos</h2>
+    <input id="search" placeholder="Buscar..."/>
+    <button onclick="getGames()">Buscar</button> 
+    <ul id="gameList"></ul>
+
     <script>    
         const API_URL = 'http://localhost:3333';
 
@@ -110,6 +115,31 @@
                 document.getElementById('output').innerText = '⛔ Error al crear el juego: ' + error.response.data.message;
             }
         }
+
+        async function getGames() {
+            const search = document.getElementById('search').value;
+            try {
+                const res = await axios.get(`${API_URL}/games?search=${search}`); //enviamos el término de búsqueda como query parameter
+            
+                const list = document.getElementById('gameList');
+                list.innerHTML = ''; // Limpiar la lista antes de agregar los juegos
+
+                // Agregar cada juego a la lista
+                res.data.forEach( game => {
+                    const li = document.createElement('li');
+                    li.innerText = `${game.titulo} - ${game.genero} - ${game.plataforma}`;
+
+                    list.appendChild(li);  // Agregar el juego a la lista hacia abajo   
+        })}  
+        catch (err){
+            console.error('Error al obtener los juegos:', err);
+            document.getElementById('output').innerText = '⛔ Error al obtener los juegos: ' + err.response.data.message;
+        }
+
+        };
+
+
+
 
     </script>
 </body>

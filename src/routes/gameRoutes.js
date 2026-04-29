@@ -7,7 +7,7 @@ import { authorize } from '../middlewares/roleMiddleware.js';
 const router = express.Router();
 
 router.post('/', auth, authorize('admin'), createGame );
-router.get('/', auth, getGames);
+router.get('/', getGames);
 router.delete('/:id', auth, authorize('admin'), deleteGame);
 
 export default router;
