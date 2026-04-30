@@ -17,6 +17,7 @@ export const auth = (req, res, next) => {
 
         // Agregar la información del usuario decodificada al objeto de solicitud
         req.user = decoded; // decoded contiene la información del usuario, como userId y role
+        if(decoded.userId ) req.user.id = decoded.userId; // Agregar el ID del usuario al objeto de solicitud para facilitar su uso en otras partes de la aplicación
         next(); // Continuar con la siguiente función de middleware o ruta
     } 
     catch (error) {
