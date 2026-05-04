@@ -27,10 +27,14 @@
     <input id="plataforma" placeholder="Plataforma" />
     <button onclick="crearJuego()">Crear juego</button>
 
-    <h2>Liste de Juegos</h2>
+    <h2>Lista de Juegos</h2>
     <input id="search" placeholder="Buscar..."/>
     <button onclick="getGames()">Buscar</button> 
     <ul id="gameList"></ul>
+
+    <h2>Mi biblioteca</h2>
+    <button onclick="getMyLibrary()">Ver mi biblioteca</button>
+    <ul id="libraryList"></ul>
 
     <script>    
         const API_URL = 'http://localhost:3333';
@@ -134,9 +138,30 @@
         catch (err){
             console.error('Error al obtener los juegos:', err);
             document.getElementById('output').innerText = '⛔ Error al obtener los juegos: ' + err.response.data.message;
-        }
+            }
 
         };
+
+        async function getMyLibrary() {
+            const token = localStorage.getItem('token'); //obtenemos el token del localStorage
+
+            const res = await axios.get(`${API_URL}/library`, {
+                headers: {
+                    Authorization: `Bearer ${token}` //enviamos el token en el header de la petición
+                }
+            });
+
+            const list = document.getElementById('libraryList');
+            list.innerHTML = ''; // Limpiar la lista antes de agregar los juegos
+
+            // Agregar cada juego a la lista
+            res.data.forEach( item => {
+                const li = document.createElement('li')
+                li.innerText = `${item.gameId.titulo} - ${item.gameId.genero} - ${item.gameId.plataforma} - Estado ${item.gameId.status}`;
+                list.appendChild(li); // Agregar el juego a la lista hacia abajo
+            })
+
+        }
 
 
 
