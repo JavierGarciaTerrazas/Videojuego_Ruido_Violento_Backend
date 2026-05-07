@@ -43,3 +43,27 @@ export const getMyLibrary = async (req, res) => {
         res.status(500).json({ message: "Error del servidor ⛔", error: error.message });
     }
 }
+
+export const updateLibraryStatus = async (req, res) => {
+    try {
+        const item = await Library.findById(req.params.id); // Buscar el elemento de la biblioteca por su ID
+        res.status(200).json(item);
+
+        if (!item) {
+            return res.status(404).json({ message: "⛔ Elemento no encontrado ✖️" });
+        }
+
+        // Verificar si el elemento existe y pertenece al usuario autenticado
+        if (item.userId.toString() !== req.user.id) { // comparar el ID del usuario del elemento con el ID del usuario autenticado
+            return res.status(403).json({ message: "⛔ Acceso denegado ✖️" });
+        }
+
+        item.status = req.body.status || item.status; // Actualizar el estado si se proporciona en el cuerpo de la solicitud
+        await item.save() // Guardar los cambios en la base de datos
+        res.status(200).json({ message: "✅ Estado actualizado ✔️", item });
+
+
+    } catch (error) {
+        res.status(500).json({ message: "Error del servidor ⛔", error: error.message });
+    }
+}
