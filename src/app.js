@@ -28,6 +28,14 @@ app.get('/protegida',auth, (req, res) => {
   });
 });
 
+// Ruta de salud para verificar que el servidor está funcionando correctamente
+app.get('/health', (req, res) => {
+  res.json({ 
+    message: 'Servidor saludable ✅', 
+    timestamp: new Date() 
+  });
+});
+
 app.get('/admin', auth, authorize('admin', 'super_admin'), (req, res)=> {
   res.json({
     message: 'Bienvenido admin 👑',

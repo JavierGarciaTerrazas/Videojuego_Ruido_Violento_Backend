@@ -67,3 +67,25 @@ export const updateLibraryStatus = async (req, res) => {
         res.status(500).json({ message: "Error del servidor ⛔", error: error.message });
     }
 }
+
+export const deleteFromLibrary = async (req, res) => {
+    try {
+
+        const item = await Library.findById(req.params.id); // Buscar el elemento de la biblioteca por su ID
+        
+        if (!item) {                                   // Verificar si el elemento existe
+            return res.status(404).json({ message: "⛔ Elemento no encontrado ✖️" });
+        }
+        
+        if (item.userId.toString() !== req.user.id) { // Verificar si el elemento pertenece al usuario autenticado
+            return res.status(403).json({ message: "⛔ Acceso denegado ✖️" });
+        }
+
+        await item.deleteOne(); // Eliminar el elemento de la biblioteca
+        res.status(200).json({ message: "✅ Juego eliminado de tu biblioteca ✔️" });
+
+    } 
+    catch (error) {
+        res.status(500).json({ error: "Error del servidor ⛔", message: error.message });
+    }
+}
