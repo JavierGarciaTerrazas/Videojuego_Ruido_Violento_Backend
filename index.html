@@ -157,10 +157,33 @@
             list.innerHTML = ''; // Limpiar la lista antes de agregar los juegos
 
             // Agregar cada juego a la lista
-            res.data.forEach( item => {
-                const li = document.createElement('li')
-                li.innerText = `${item.gameId.titulo} - ${item.gameId.genero} - ${item.gameId.plataforma} - Estado ${item.status}`;
+
+            // res.data.forEach( item => {
+            //     const li = document.createElement('li')
+            //     li.innerText = `${item.gameId.titulo} - ${item.gameId.genero} - ${item.gameId.plataforma} - Estado ${item.status}`;
+            //     list.appendChild(li); // Agregar el juego a la lista hacia abajo
+            // })
+
+            // agregar cada juego a la lista con un botón para cambiar el estado del juego y boton para eliminar
+
+            res.data.forEach(item => {
+                const li = document.createElement('li');
+
+                li.innerHTML = `
+                    ${item.gameId.titulo} - ${item.gameId.genero} - ${item.gameId.plataforma} - Estado:
+
+                    <select onchange="updateStatus('${item._id}', this.value)">
+                        <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                        <option value="playing" ${item.status === 'playing' ? 'selected' : ''}>Jugando</option>
+                        <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>Completado</option>
+                    </select>
+                    
+                    <button onclick="removeFromLibrary('${item._id}')">🗑️</button>
+
+                `;
+
                 list.appendChild(li); // Agregar el juego a la lista hacia abajo
+
             })
 
         }
@@ -184,6 +207,38 @@
 
         }
 
+        async function updateStatus(id, status) {
+            const token = localStorage.getItem('token'); //obtenemos el token del localStorage
+
+            try {
+                await axios.patch(`${API_URL}/library/${id}`,{
+                    status
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}` //enviamos el token en el header de la petición
+                    }
+                })
+            } catch (err){
+                alert('Error al actualizar el estado del juego: ' + err.response.data.message);
+            }
+        }
+
+        async function removeFromLibrary(id) {
+            const token = localStorage.getItem('token'); //obtenemos el token del localStorage
+
+            try {
+                await axios.delete(`${API_URL}/library/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` //enviamos el token en el header de la petición
+                    }
+                });
+
+                getMyLibrary(); // Actualizar la lista de la biblioteca después de eliminar el juego
+
+            } catch (error){
+                alert('Error al eliminar el juego' + error.response.data.message);
+            }
+        }
 
 
 
