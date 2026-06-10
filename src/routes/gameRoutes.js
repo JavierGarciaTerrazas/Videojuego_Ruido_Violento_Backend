@@ -1,13 +1,10 @@
 import express from 'express';
-import { createGame, getGames, deleteGame}  from '../controllers/gameController.js';
-import { auth } from '../middlewares/authMiddleware.js';
-import { authorize } from '../middlewares/roleMiddleware.js';
-
+import { saveGameSceneStats } from '../controllers/gameController.js';
+import { getGameSceneStats } from '../controllers/gameController.js';
 
 const router = express.Router();
 
-router.post('/', auth, authorize('admin'), createGame );
-router.get('/', getGames);
-router.delete('/:id', auth, authorize('admin'), deleteGame);
+router.post('/stats', saveGameSceneStats);
+router.get('/stats', getGameSceneStats);
 
 export default router;
